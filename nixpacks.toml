@@ -1,5 +1,11 @@
+[providers]
+java = "19"
+
+[phases.setup]
+nixPkgs = ["openjdk19"]
+
 [phases.build]
-cmds = ['./mvnw clean package -DskipTests']
+cmds = ["./mvnw clean package -DskipTests"]
 
 [start]
-cmd = 'java -jar target/beautybooking-0.0.1-SNAPSHOT.jar'
+cmd = "java -Dserver.port=$PORT -jar target/beautybooking-0.0.1-SNAPSHOT.jar"
