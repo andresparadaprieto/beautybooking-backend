@@ -122,6 +122,28 @@
     </dependencies>
 
 	<build>
+        <resources>
+        <!-- Recursos generales con filtrado activado (si tienes otros archivos que lo necesiten) -->
+        <resource>
+            <directory>src/main/resources</directory>
+            <filtering>true</filtering>
+            <excludes>
+                <exclude>application-railway.properties</exclude> <!-- Excluye este archivo del filtrado -->
+                <exclude>application-dev.properties</exclude>     <!-- Opcional: excluye si también tiene issues -->
+                <exclude>application.properties</exclude>        <!-- Opcional: excluye el principal si aplica -->
+            </excludes>
+        </resource>
+        <!-- Copia los archivos excluidos SIN filtrado -->
+        <resource>
+            <directory>src/main/resources</directory>
+            <filtering>false</filtering> <!-- Deshabilita filtrado aquí -->
+            <includes>
+                <include>application-railway.properties</include>
+                <include>application-dev.properties</include>     <!-- Opcional -->
+                <include>application.properties</include>        <!-- Opcional -->
+            </includes>
+        </resource>
+    </resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
