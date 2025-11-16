@@ -6,9 +6,13 @@ import com.beautybooking.dto.response.AuthResponse;
 import com.beautybooking.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * Controller de autenticación.
@@ -20,12 +24,13 @@ import org.springframework.web.bind.annotation.*;
  * - POST /auth/login - Login y obtención de token JWT
  *
  * @author Andres Eduardo Parada Prieto
- * @version 1.0
+ * @version 1.1
  * @since 2025
  */
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
     private final AuthService authService;
@@ -40,9 +45,24 @@ public class AuthController {
      * @return AuthResponse con token JWT y datos del usuario
      */
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
-        AuthResponse response = authService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+        try {
+            AuthResponse response = authService.register(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", e.getMessage()));
+
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "El email ya está registrado"));
+
+        } catch (Exception e) {
+            log.error("Error inesperado en registro de usuario", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Error interno del servidor. Contacta al administrador."));
+        }
     }
 
     /**
@@ -55,8 +75,19 @@ public class AuthController {
      * @return AuthResponse con token JWT y datos del usuario
      */
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
-        AuthResponse response = authService.login(request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
+        try {
+            AuthResponse response = authService.login(request);
+            return ResponseEntity.ok(response);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", e.getMessage()));
+
+        } catch (Exception e) {
+            log.error("Error inesperado en login", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Error interno del servidor. Contacta al administrador."));
+        }
     }
 }
