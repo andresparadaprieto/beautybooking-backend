@@ -71,15 +71,16 @@ Sistema de gestión de reservas para centros de estética y salones de belleza.
 ### 1. Clonar el repositorio
 
 **Desde la terminal**:
-
+```
 git clone https://github.com/andresparadaprieto/beautybooking-backend.git
+```
 ```
 cd beautybooking-backend
 ```
 ### Instalar dependencias
-
+```
 mvn clean install
-
+```
 ⚙️ Configuración
 Perfiles disponibles:
 
