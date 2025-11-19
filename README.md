@@ -115,12 +115,6 @@ jwt.expiration-ms=86400000
 app.cors.allowed-origins=${CORS_ORIGINS:http://localhost:5173}
 ```
 
-# 💅 Beauty Booking API
-
-Sistema de reservas para salones de belleza desarrollado con Spring Boot.
-
----
-
 ## 🚀 Ejecutar la Aplicación
 
 ### Desarrollo Local (Base de datos H2 en memoria)
