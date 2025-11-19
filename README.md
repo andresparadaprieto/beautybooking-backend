@@ -16,7 +16,6 @@ Sistema de gestión de reservas para centros de estética y salones de belleza.
 
 - [Características](#-características)
 - [Ejecutar la Aplicación](#-ejecutar-la-aplicación)
-- [Scripts SQL](#-scripts-sql)
 - [Credenciales de Prueba](#-credenciales-de-prueba)
 
 
