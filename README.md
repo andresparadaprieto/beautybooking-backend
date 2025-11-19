@@ -4,7 +4,7 @@ Sistema de gestión de reservas para centros de estética y salones de belleza.
 
 **Proyecto:** DAW (Desarrollo de Aplicaciones Web) - Ciclo Formativo
 **Autor:** Andres Eduardo Parada Prieto
-**Tecnologías:** Spring Boot 3.2.5, Java 17, MySQL 8, JWT, Flyway
+**Tecnologías:** Spring Boot 3.2.5, Java 19, MySQL 8, JWT, Flyway
 **Despliegue:** Railway (producción) + H2 (desarrollo local)
 
 ---
@@ -60,7 +60,7 @@ Sistema de gestión de reservas para centros de estética y salones de belleza.
 
 ### Para desarrollo local:
 
-- **Java 17** o superior ([OpenJDK](https://adoptium.net/))
+- **Java 19** o superior ([OpenJDK](https://adoptium.net/))
 - **Maven 3.8+** ([Descargar](https://maven.apache.org/download.cgi))
 - **IDE:** IntelliJ IDEA, Eclipse o VS Code
 - **Git** ([Descargar](https://git-scm.com/))
@@ -83,21 +83,29 @@ cd beautybooking-backend
 
 mvn clean install
 
-### Configurar variables de entorno (opcional)
-
-cp .env.example .env
-
 ⚙️ Configuración
 Perfiles disponibles:
 
 dev (por defecto): H2 en memoria para desarrollo
 railway: MySQL en Railway para producción
 
-Variables de entorno importantes:
-VariableDescripciónValor por defectoSPRING_PROFILES_ACTIVEPerfil activodevJWT_SECRETClave secreta JWT(cambiar en producción)CORS_ORIGINSOrígenes permitidoshttp://localhost:5173JDBC_DATABASE_URLURL de MySQL (Railway)(auto en Railway)
-application.properties principales:
-properties# Perfil activo
+# Variables de entorno importantes
+
+| Variable              | Descripción                          | Valor por defecto          |
+|-----------------------|--------------------------------------|----------------------------|
+| SPRING_PROFILES_ACTIVE| Perfil activo                        | dev                        |
+| JWT_SECRET            | Clave secreta JWT (cambiar en prod.) | —                          |
+| CORS_ORIGINS          | Orígenes permitidos                  | http://localhost:5173      |
+| JDBC_DATABASE_URL     | URL de MySQL (Railway)               | (auto en Railway)          |
+
+---
+
+# application.properties principales
+
+```properties
+# Perfil activo
 spring.profiles.active=${SPRING_PROFILES_ACTIVE:dev}
+
 
 # JWT
 jwt.secret=${JWT_SECRET:cambiar-en-produccion}
@@ -105,100 +113,213 @@ jwt.expiration-ms=86400000
 
 # CORS
 app.cors.allowed-origins=${CORS_ORIGINS:http://localhost:5173}
+```
 
-🚀 Ejecutar la Aplicación
-Desarrollo local (H2):
-bashmvn spring-boot:run
-La aplicación arranca en: http://localhost:8080
-Ver base de datos H2 (solo dev):
-Acceder a: http://localhost:8080/h2-console
+# 💅 Beauty Booking API
 
-JDBC URL: jdbc:h2:mem:beautybooking
-Username: sa
-Password: (vacío)
+Sistema de reservas para salones de belleza desarrollado con Spring Boot.
 
-Con MySQL local (opcional):
-bash# Cambiar perfil a 'local' y configurar MySQL en application-local.properties
+---
+
+## 🚀 Ejecutar la Aplicación
+
+### Desarrollo Local (Base de datos H2 en memoria)
+
+```bash
+mvn spring-boot:run
+```
+
+La aplicación arranca en: **http://localhost:8080**
+
+#### Consola H2 (solo desarrollo)
+
+- **URL:** http://localhost:8080/h2-console
+- **JDBC URL:** `jdbc:h2:mem:beautybooking`
+- **Username:** `sa`
+- **Password:** _(vacío)_
+
+### Con MySQL Local (opcional)
+
+```bash
+# Cambiar perfil a 'local' y configurar MySQL en application-local.properties
 mvn spring-boot:run -Dspring-boot.run.profiles=local
+```
 
-📡 Endpoints API
-Autenticación (públicos)
-MétodoEndpointDescripciónPOST/auth/registerRegistrar nuevo usuarioPOST/auth/loginLogin y obtener token JWT
-Servicios (públicos)
-MétodoEndpointDescripciónGET/serviciosListar servicios activosGET/servicios/{id}Obtener servicio por IDGET/servicios/buscar?nombre=XBuscar servicios
-Franjas (públicas)
-MétodoEndpointDescripciónGET/franjas/disponibles?servicioId=X&fecha=YYYY-MM-DDFranjas disponibles
-Reservas (autenticadas)
-MétodoEndpointDescripciónPOST/reservasCrear reservaGET/reservas/misMis reservasGET/reservas/{id}Ver reservaDELETE/reservas/{id}Cancelar reserva
-Administración (solo ADMIN)
-MétodoEndpointDescripciónPOST/admin/serviciosCrear servicioPUT/admin/servicios/{id}Actualizar servicioDELETE/admin/servicios/{id}Eliminar servicioPOST/admin/franjasCrear franjaDELETE/admin/franjas/{id}Eliminar franjaGET/admin/reservasVer todas las reservasGET/admin/reservas/hoyReservas de hoyPATCH/admin/reservas/{id}/confirmarConfirmar reserva
-Ejemplo de petición con JWT:
-bash# Login
+---
+
+## 📡 Endpoints de la API
+
+### 🔓 Autenticación (Públicos)
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `POST` | `/auth/register` | Registrar nuevo usuario |
+| `POST` | `/auth/login` | Login y obtener token JWT |
+
+### 💼 Servicios (Públicos)
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `GET` | `/servicios` | Listar servicios activos |
+| `GET` | `/servicios/{id}` | Obtener servicio por ID |
+| `GET` | `/servicios/buscar?nombre=X` | Buscar servicios |
+
+### 📅 Franjas Horarias (Públicas)
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `GET` | `/franjas/disponibles?servicioId=X&fecha=YYYY-MM-DD` | Obtener franjas disponibles |
+
+### 📝 Reservas (Autenticadas - Requieren JWT)
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `POST` | `/reservas` | Crear nueva reserva |
+| `GET` | `/reservas/mis` | Ver mis reservas |
+| `GET` | `/reservas/{id}` | Ver detalle de reserva |
+| `DELETE` | `/reservas/{id}` | Cancelar reserva |
+
+### 👑 Administración (Solo ADMIN)
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `POST` | `/admin/servicios` | Crear servicio |
+| `PUT` | `/admin/servicios/{id}` | Actualizar servicio |
+| `DELETE` | `/admin/servicios/{id}` | Eliminar servicio |
+| `POST` | `/admin/franjas` | Crear franja horaria |
+| `DELETE` | `/admin/franjas/{id}` | Eliminar franja |
+| `GET` | `/admin/reservas` | Ver todas las reservas |
+| `GET` | `/admin/reservas/hoy` | Reservas de hoy |
+| `PATCH` | `/admin/reservas/{id}/confirmar` | Confirmar reserva |
+
+---
+
+## 🔐 Ejemplo de Autenticación con JWT
+
+### 1. Realizar Login
+
+```bash
 curl -X POST http://localhost:8080/auth/login \
--H "Content-Type: application/json" \
--d '{"email":"admin@beautybooking.com","password":"admin123"}'
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@beautybooking.com",
+    "password": "admin123"
+  }'
+```
 
-# Respuesta:
+### 2. Respuesta del Login
+
+```json
 {
-"token": "eyJhbGciOiJIUzI1NiJ9...",
-"type": "Bearer",
-"email": "admin@beautybooking.com",
-"rol": "ADMIN"
+  "token": "eyJhbGciOiJIUzI1NiJ9...",
+  "type": "Bearer",
+  "email": "admin@beautybooking.com",
+  "rol": "ADMIN"
 }
+```
 
-# Usar el token en peticiones protegidas:
+### 3. Usar el Token en Peticiones Protegidas
+
+```bash
 curl -X GET http://localhost:8080/reservas/mis \
--H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9..."
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9..."
+```
 
-☁️ Despliegue en Railway
-1. Crear proyecto en Railway
+---
 
-Ir a Railway.app
-Crear nuevo proyecto
-Añadir servicio MySQL
-Añadir servicio "Deploy from GitHub"
+## ☁️ Despliegue en Railway
 
-2. Configurar variables de entorno en Railway
-   envSPRING_PROFILES_ACTIVE=railway
-   JDBC_DATABASE_URL=jdbc:mysql://...  (Railway lo proporciona)
-   JDBC_DATABASE_USERNAME=root  (Railway lo proporciona)
-   JDBC_DATABASE_PASSWORD=...  (Railway lo proporciona)
-   JWT_SECRET=tu-secreto-super-seguro-minimo-256-bits
-   CORS_ORIGINS=
-3. Deploy automático
-   Railway detectará el pom.xml y:
+### Paso 1: Crear Proyecto en Railway
 
-Compilará con Maven
-Ejecutará Flyway (migraciones SQL)
-Iniciará la aplicación
+1. Ir a [Railway.app](https://railway.app)
+2. Crear nuevo proyecto
+3. Añadir servicio **MySQL**
+4. Añadir servicio **"Deploy from GitHub"**
 
-4. Verificar despliegue
-   Acceder a: 
-   Debe devolver: {"status":"UP"}
+### Paso 2: Configurar Variables de Entorno
 
-🗄️ Scripts SQL
-Exportar base de datos:
-bash# MySQL
+En el panel de Railway, añade las siguientes variables:
+
+```env
+SPRING_PROFILES_ACTIVE=railway
+JDBC_DATABASE_URL=jdbc:mysql://...  # Railway lo proporciona automáticamente
+JDBC_DATABASE_USERNAME=root         # Railway lo proporciona automáticamente
+JDBC_DATABASE_PASSWORD=...          # Railway lo proporciona automáticamente
+JWT_SECRET=tu-secreto-super-seguro-minimo-256-bits
+CORS_ORIGINS=https://tu-frontend.com
+```
+
+### Paso 3: Deploy Automático
+
+Railway detectará el `pom.xml` y automáticamente:
+
+- ✅ Compilará el proyecto con Maven
+- ✅ Ejecutará las migraciones de Flyway
+- ✅ Iniciará la aplicación Spring Boot
+
+### Paso 4: Verificar Despliegue
+
+Acceder a: `https://tu-app.railway.app/actuator/health`
+
+Debe devolver:
+
+```json
+{
+  "status": "UP"
+}
+```
+
+---
+
+## 🗄️ Gestión de Base de Datos
+
+### Exportar Base de Datos
+
+```bash
+# MySQL Local
 mysqldump -u root -p beautybooking > backup.sql
 
 # Desde Railway
 railway run mysqldump beautybooking > railway_backup.sql
-Importar base de datos:
-bash# MySQL local
+```
+
+### Importar Base de Datos
+
+```bash
+# MySQL Local
 mysql -u root -p beautybooking < backup.sql
 
 # A Railway
 railway run mysql beautybooking < backup.sql
-Script completo de schema:
-Ver: src/main/resources/db/migration/V1__create_schema.sql
+```
 
-🔑 Credenciales de Prueba
-Usuario Administrador:
+### Schema Completo
 
-Email: admin@beautybooking.com
-Password: admin123
+El schema completo se encuentra en:  
+📁 `src/main/resources/db/migration/V1__create_schema.sql`
 
-Clientes de Prueba:
+---
 
-Email: maria.garcia@example.com | Password: password123
-Email: carlos.rodriguez@example.com | Password: password123
+## 🔑 Credenciales de Prueba
+
+### 👑 Usuario Administrador
+
+- **Email:** `admin@beautybooking.com`
+- **Password:** `admin123`
+
+### 👤 Clientes de Prueba
+
+| Email | Password |
+|-------|----------|
+| `maria.garcia@example.com` | `password123` |
+| `carlos.rodriguez@example.com` | `password123` |
+
+---
+
+## 📦 Tecnologías Utilizadas
+
+- **Backend:** Spring Boot 3.x
+- **Seguridad:** Spring Security + JWT
+- **Base de Datos:** MySQL / H2 (desarrollo)
+- **Migraciones:** Flyway
+- **Build:** Maven
