@@ -78,8 +78,9 @@ mvn clean install
 ⚙️ Configuración
 Perfiles disponibles:
 
-dev (por defecto): H2 en memoria para desarrollo
-railway: MySQL en Railway para producción
+**dev** (por defecto): H2 en memoria para desarrollo
+
+**railway**: MySQL en Railway para producción
 
 # Variables de entorno importantes
 
