@@ -2,10 +2,13 @@
 
 Sistema de gestión de reservas para centros de estética y salones de belleza.
 
-**Proyecto:** DAW (Desarrollo de Aplicaciones Web) - Ciclo Formativo
-**Autor:** Andres Eduardo Parada Prieto
-**Tecnologías:** Spring Boot 3.2.5, Java 19, MySQL 8, JWT, Flyway
-**Despliegue:** Railway (producción) + H2 (desarrollo local)
+**Proyecto:** DAW (Desarrollo de Aplicaciones Web) - Ciclo Formativo.
+
+**Autor:** Andres Eduardo Parada Prieto.
+
+**Tecnologías:** Spring Boot 3.2.5, Java 19, MySQL 8, JWT, Flyway.
+
+**Despliegue:** Railway (producción) + H2 (desarrollo local).
 
 ---
 
