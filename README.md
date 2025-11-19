@@ -132,13 +132,6 @@ La aplicación arranca en: **http://localhost:8080**
 - **Username:** `sa`
 - **Password:** _(vacío)_
 
-### Con MySQL Local (opcional)
-
-```bash
-# Cambiar perfil a 'local' y configurar MySQL en application-local.properties
-mvn spring-boot:run -Dspring-boot.run.profiles=local
-```
-
 ---
 
 ## 📡 Endpoints de la API
