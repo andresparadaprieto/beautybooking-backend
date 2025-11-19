@@ -256,25 +256,7 @@ Debe devolver:
 
 ## 🗄️ Gestión de Base de Datos
 
-### Exportar Base de Datos
 
-```bash
-# MySQL Local
-mysqldump -u root -p beautybooking > backup.sql
-
-# Desde Railway
-railway run mysqldump beautybooking > railway_backup.sql
-```
-
-### Importar Base de Datos
-
-```bash
-# MySQL Local
-mysql -u root -p beautybooking < backup.sql
-
-# A Railway
-railway run mysql beautybooking < backup.sql
-```
 
 ### Schema Completo
 
