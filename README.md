@@ -12,18 +12,11 @@ Sistema de gestión de reservas para centros de estética y salones de belleza.
 ## 📋 Tabla de Contenidos
 
 - [Características](#-características)
-- [Arquitectura](#-arquitectura)
-- [Requisitos](#-requisitos)
-- [Instalación Local](#-instalación-local)
 - [Configuración](#-configuración)
 - [Ejecutar la Aplicación](#-ejecutar-la-aplicación)
-- [Endpoints API](#-endpoints-api)
-- [Despliegue en Railway](#-despliegue-en-railway)
 - [Scripts SQL](#-scripts-sql)
 - [Credenciales de Prueba](#-credenciales-de-prueba)
-- [Estructura del Proyecto](#-estructura-del-proyecto)
-- [Testing](#-testing)
-- [Licencia](#-licencia)
+
 
 ---
 
