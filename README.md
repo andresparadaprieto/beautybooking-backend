@@ -66,13 +66,16 @@ Sistema de gestión de reservas para centros de estética y salones de belleza.
 
 ---
 
-## 📦 Instalación Local
+## 📦 Instalación de la app 
 
 ### 1. Clonar el repositorio
 
-git clone https://github.com/andresparadaprieto/beautybooking-backend.git
-cd beautybooking-backend
+**Desde la terminal**:
 
+git clone https://github.com/andresparadaprieto/beautybooking-backend.git
+```
+cd beautybooking-backend
+```
 ### Instalar dependencias
 
 mvn clean install
